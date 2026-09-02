@@ -52,7 +52,7 @@ CREATE TABLE wallet_audit_logs (
         REFERENCES riders(id),
 
     CONSTRAINT wallet_audit_action_check
-        CHECK (action_type IN ('CREDIT', 'DEBIT')),
+        CHECK (action_type IN ('CREDIT','ESCROW_HOLD','ESCROW_RELEASE', 'DEBIT')),
 
     CONSTRAINT wallet_audit_balance_nonnegative
         CHECK (balance_after >= 0)
