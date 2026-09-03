@@ -1,9 +1,9 @@
 use("ridesync_mongo");
 
-// Sample rider location: Bengaluru
+// Sample rider location: Lucknow
 const rider_location = {
     type: "Point",
-    coordinates: [77.5946, 12.9716]
+    coordinates: [80.9462, 26.8467]
 };
 
 const nearest_vehicle = db.TelemetryPings.aggregate([
