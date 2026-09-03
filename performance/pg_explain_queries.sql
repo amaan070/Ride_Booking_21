@@ -1,8 +1,4 @@
--- ============================================================
--- Performance Testing: PostgreSQL EXPLAIN ANALYZE
--- Covers: partial unique index, unique constraint, wallet audit
--- lookups, joins, materialized view, and window-function view.
--- ============================================================
+
 
 \echo '=== 1. Active trip check (tests partial unique index on active trips) ==='
 EXPLAIN ANALYZE

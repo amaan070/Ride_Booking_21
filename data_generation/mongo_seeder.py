@@ -4,23 +4,22 @@ import datetime
 import psycopg2
 import pymongo
 
-# ---------- CONFIG ----------
 PG_CONFIG = {
     "host": "localhost",
     "port": 5432,
     "dbname": "ridesync_db",
     "user": "postgres",
-    "password": "1234",   # <-- same password as postgres_seeder.py
+    "password": "1234",   
 }
 
 MONGO_URI = "mongodb://localhost:27017"
 MONGO_DB = "ridesync_mongo"
 
-NUM_PINGS = 520000          # comfortably above the 500,000+ requirement
-TTL_WINDOW_SECONDS = 7000   # stay under the 7200s TTL cutoff, with a safety buffer
+NUM_PINGS = 520000          
+TTL_WINDOW_SECONDS = 7000   
 BATCH_SIZE = 5000
 
-# Roughly Hyderabad city bounds, so pings cluster in a real, plausible area
+# Roughly Hyderabad city bounds
 CITY_CENTER = (78.4867, 17.3850)   # (longitude, latitude)
 
 FEEDBACK_TAGS = [

@@ -5,24 +5,21 @@ import psycopg2
 import psycopg2.extras as extras
 from faker import Faker
 
-# ---------- CONFIG: put your real Postgres password below ----------
 PG_CONFIG = {
     "host": "localhost",
     "port": 5432,
     "dbname": "ridesync_db",
     "user": "postgres",
-    "password": "1234",   # <-- make sure this matches what worked in psql
+    "password": "1234",   
 }
 
 NUM_RIDERS = 6000
 NUM_VEHICLES = 600
-NUM_TRIPS = 52000        # 50,000 trips -> ~100,000 audit log rows
-DAYS_SPREAD = 60         # spread trips across the last 60 days
+NUM_TRIPS = 52000        
+DAYS_SPREAD = 60        
 
-fake = Faker("en_IN")   # Indian names/locale for realism
+fake = Faker("en_IN")   # Indian names
 
-# Vehicle classes with realistic base fare (per trip) and probability weight
-# weight = how common this class is in real fleets (bikes/autos most common)
 VEHICLE_CLASSES = [
     {"name": "Bike",        "weight": 30, "base_fare": (30, 90)},
     {"name": "Auto",        "weight": 25, "base_fare": (40, 120)},
@@ -34,7 +31,6 @@ VEHICLE_CLASSES = [
     {"name": "XL",          "weight": 1,  "base_fare": (300, 700)},
 ]
 
-# Real Indian state/district style RTO codes for plates, e.g. TS09, KA05, MH12
 RTO_CODES = ["TS09", "TS07", "KA01", "KA05", "MH12", "MH01", "DL08", "AP09", "TN07", "UP32"]
 
 
@@ -61,14 +57,12 @@ def seed_riders(conn):
     data = []
     for _ in range(NUM_RIDERS):
         name = fake.name()
-        # Realistic wallet distribution: most people keep modest balances,
-        # a small number keep much higher balances (long-tail, not uniform).
         if random.random() < 0.85:
-            balance = round(random.uniform(50, 800), 2)      # everyday users
+            balance = round(random.uniform(50, 800), 2)     
         elif random.random() < 0.97:
-            balance = round(random.uniform(800, 2500), 2)    # frequent users
+            balance = round(random.uniform(800, 2500), 2)    
         else:
-            balance = round(random.uniform(2500, 6000), 2)   # power users
+            balance = round(random.uniform(2500, 6000), 2)   
         data.append((name, balance))
     with conn.cursor() as cur:
         rows = extras.execute_values(
@@ -115,7 +109,7 @@ def seed_vehicles(conn):
 def random_past_timestamp():
     """Spread trips realistically: more trips recently, fewer far in the past,
     and cluster trip times around real commute hours (morning/evening peaks)."""
-    days_ago = int(random.triangular(0, DAYS_SPREAD, 0))  # skewed toward recent days
+    days_ago = int(random.triangular(0, DAYS_SPREAD, 0))  
     # Weighted hour: peaks around 8-10am and 6-9pm, quieter overnight
     hour_weights = [1,1,1,1,1,2,4,7,9,8,5,4,4,5,5,4,5,7,9,8,6,4,2,1]
     hour = random.choices(range(24), weights=hour_weights, k=1)[0]
@@ -137,7 +131,7 @@ def seed_trips(conn, balances, vehicles):
             rider_id = random.choice(rider_ids)
             vehicle = random.choice(vehicles)
             fare = fare_for_class(vehicle["class"])
-            topup = round(fare + random.uniform(20, 600), 2)  # top up a bit more than the fare needs
+            topup = round(fare + random.uniform(20, 600), 2)  
 
             old_balance = balances[rider_id]
             after_topup = round(old_balance + topup, 2)

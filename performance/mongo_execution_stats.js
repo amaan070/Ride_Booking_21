@@ -2,7 +2,7 @@ use("ridesync_mongo");
 
 const results = {};
 
-// 1. $geoNear - nearest available vehicle within 5km (your core workflow query)
+// 1. $geoNear - nearest available vehicle within 5km
 results.geoNear_nearest_vehicle = db.TelemetryPings.aggregate([
     {
         $geoNear: {
@@ -16,7 +16,7 @@ results.geoNear_nearest_vehicle = db.TelemetryPings.aggregate([
     { $limit: 1 }
 ], { explain: true });
 
-// 2. Find all pings for one vehicle (tests basic vehicle_id lookup, no index on this field)
+// 2. Find all pings for one vehicle
 results.pings_by_vehicle = db.TelemetryPings.find(
     { vehicle_id: db.TelemetryPings.findOne().vehicle_id }
 ).explain("executionStats");
@@ -26,7 +26,7 @@ results.count_available = db.TelemetryPings.find(
     { is_available: true }
 ).explain("executionStats");
 
-// 4. Geospatial + availability combined filter (tests 2dsphere index with extra filter)
+// 4. Geospatial + availability combined filter
 results.geo_plus_availability = db.TelemetryPings.find({
     location: {
         $near: {
@@ -37,17 +37,17 @@ results.geo_plus_availability = db.TelemetryPings.find({
     is_available: true
 }).explain("executionStats");
 
-// 5. Reviews for one vehicle (tests vehicle_id lookup on TripReviews, no index)
+// 5. Reviews for one vehicle 
 results.reviews_by_vehicle = db.TripReviews.find(
     { vehicle_id: db.TripReviews.findOne().vehicle_id }
 ).explain("executionStats");
 
-// 6. Reviews with rating >= 4 (tests range filter, no index)
+// 6. Reviews with rating >= 4 
 results.high_rated_reviews = db.TripReviews.find(
     { rating: { $gte: 4 } }
 ).explain("executionStats");
 
-// 7. $facet review analysis (the actual workflow 4 query, full pipeline)
+// 7. $facet review analysis 
 results.facet_review_analysis = db.TripReviews.aggregate([
     {
         $facet: {
@@ -62,7 +62,7 @@ results.facet_review_analysis = db.TripReviews.aggregate([
     }
 ], { explain: true });
 
-// 8. VehicleMetadata lookup by vehicle_id (tests unindexed collection)
+// 8. VehicleMetadata lookup by vehicle_id 
 results.vehicle_metadata_lookup = db.VehicleMetadata.find(
     { vehicle_id: db.VehicleMetadata.findOne().vehicle_id }
 ).explain("executionStats");
