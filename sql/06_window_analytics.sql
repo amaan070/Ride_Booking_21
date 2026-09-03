@@ -2,7 +2,6 @@ DROP VIEW IF EXISTS vw_vehicle_revenue_moving_avg;
 
 CREATE VIEW vw_vehicle_revenue_moving_avg AS
 WITH daily_revenue AS (
-    -- Step 1: collapse trips into one revenue figure per vehicle per day.
     SELECT
         vehicle_id,
         created_at::date AS revenue_date,
@@ -12,7 +11,6 @@ WITH daily_revenue AS (
     GROUP BY vehicle_id, created_at::date
 ),
 moving_avg AS (
-    -- Step 2: 7-day trailing moving average per vehicle, ordered by day.
     SELECT
         vehicle_id,
         revenue_date,
@@ -24,7 +22,7 @@ moving_avg AS (
         ) AS moving_avg_7day
     FROM daily_revenue
 )
--- Step 3: rank vehicles against each other, per day, by that moving average.
+
 SELECT
     m.vehicle_id,
     v.license_plate,
