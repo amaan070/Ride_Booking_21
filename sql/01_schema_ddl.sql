@@ -43,7 +43,7 @@ CREATE TABLE wallet_audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     rider_id UUID NOT NULL,
     amount_changed NUMERIC(12,2) NOT NULL,
-    action_type VARCHAR(10) NOT NULL,
+    action_type VARCHAR(20) NOT NULL,
     balance_after NUMERIC(12,2) NOT NULL,
     timestamp TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

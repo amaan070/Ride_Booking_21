@@ -1,0 +1,97 @@
+############################################################
+RIDESYNC - MONGODB PERFORMANCE & ANALYSIS REPORT
+Generated: Fri Sep 04 2026 20:43:29 GMT+0530 (India Standard Time)
+############################################################
+
+============================================================
+REVIEW ANALYSIS SUMMARY
+============================================================
+
+------------------------------------------------------------
+Overall Rating
+------------------------------------------------------------
+Average Rating   : 4.15 / 5
+Total Reviews    : 28388
+
+------------------------------------------------------------
+Rating Distribution
+------------------------------------------------------------
+  1 star (*) : 817 review(s)
+  2 star (**) : 1393 review(s)
+  3 star (***) : 3417 review(s)
+  4 star (****) : 9921 review(s)
+  5 star (*****) : 12840 review(s)
+
+------------------------------------------------------------
+Top Feedback Tags
+------------------------------------------------------------
+  1. SAFE_DRIVING - 4833 mention(s)
+  2. FRIENDLY_DRIVER - 4807 mention(s)
+  3. RASH_DRIVING - 4769 mention(s)
+  4. OVERCHARGED - 4758 mention(s)
+  5. LATE_ARRIVAL - 4756 mention(s)
+  6. AC_NOT_WORKING - 4737 mention(s)
+  7. GOOD_MUSIC - 4731 mention(s)
+  8. COMFORTABLE_RIDE - 4717 mention(s)
+  9. SMOOTH_RIDE - 4670 mention(s)
+  10. ON_TIME - 4638 mention(s)
+
+============================================================
+VEHICLE AVAILABILITY
+============================================================
+Available Vehicles Right Now : 333080
+
+============================================================
+NEAREST AVAILABLE VEHICLE
+============================================================
+Vehicle ID     : b8ae33ac-ccf0-4652-b599-be6cd3181e80
+Distance       : 13.741289688540432 meters (~0.01 km)
+Availability   : Available
+
+============================================================
+TOP RATED VEHICLES (WITH METADATA)
+============================================================
+  1. Vehicle ba24b79a-8a58-46f6-b230-57948b734b1a
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : wheelchair_accessible, ac, music_system, premium_interior
+     Last Inspection  : Sun Mar 22 2026
+  2. Vehicle bc534b17-4fbd-4f47-8e8f-d1ca55824ac2
+     Avg Rating       : 5.00 (2 review(s))
+     Features         : child_seat, phone_charger, ac, music_system
+     Last Inspection  : Sat Dec 13 2025
+  3. Vehicle 0048db23-cf7d-4c4e-9339-d1fa2e1005b4
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : ac, child_seat, wheelchair_accessible, music_system
+     Last Inspection  : Sat Sep 05 2026
+  4. Vehicle d7787151-5db2-4087-b402-d2458cb647a3
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : wheelchair_accessible, wifi, child_seat
+     Last Inspection  : Tue May 26 2026
+  5. Vehicle 673b6b1b-f64f-441a-b0cd-31fbf473dd94
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : phone_charger, child_seat
+     Last Inspection  : Sun May 10 2026
+  6. Vehicle 2b36c279-a177-45fa-a269-b7c732c08f7e
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : ac, child_seat
+     Last Inspection  : Fri Aug 07 2026
+  7. Vehicle 69974541-660e-44ad-a3d0-9263c791cbd3
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : phone_charger, ac
+     Last Inspection  : Wed Apr 29 2026
+  8. Vehicle f30c2578-149f-440b-95e2-42c49c210c9e
+     Avg Rating       : 5.00 (2 review(s))
+     Features         : wifi
+     Last Inspection  : Tue May 26 2026
+  9. Vehicle 4b210bf6-1e42-46f7-9680-75b925c86949
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : phone_charger, child_seat
+     Last Inspection  : Sun Jul 05 2026
+  10. Vehicle 7b3ed478-bd77-4e87-90b8-446465a8d0f1
+     Avg Rating       : 5.00 (2 review(s))
+     Features         : music_system, phone_charger, wheelchair_accessible, ac
+     Last Inspection  : Sat May 09 2026
+
+############################################################
+END OF REPORT
+############################################################
