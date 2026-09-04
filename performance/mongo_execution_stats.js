@@ -9,9 +9,11 @@ const fs = require("fs");
 // Output file setup
 // ============================================================
 const OUTPUT_FILE = ".\\performance\\mongo_output.txt";
+const STATS_FILE  = ".\\performance\\mongo_explain_stats.txt";
 
-// Clear/create the file at the start of the run
+// Clear/create both files at the start of the run
 fs.writeFileSync(OUTPUT_FILE, "");
+fs.writeFileSync(STATS_FILE, "");
 
 // ============================================================
 // Helper functions
@@ -25,7 +27,7 @@ function printSection(title, data) {
     printjson(data);
 }
 
-// Writes a line to the report file only
+// ---- mongo_output.txt (analysis report) helpers ----
 function reportLine(line = "") {
     fs.appendFileSync(OUTPUT_FILE, line + "\n");
 }
@@ -41,6 +43,109 @@ function reportSubHeading(title) {
     reportLine("\n" + "-".repeat(60));
     reportLine(title);
     reportLine("-".repeat(60));
+}
+
+// ---- mongo_explain_stats.txt (execution stats) helpers ----
+function statsLine(line = "") {
+    fs.appendFileSync(STATS_FILE, line + "\n");
+}
+
+function statsHeading(title) {
+    const bar = "=".repeat(60);
+    statsLine("\n" + bar);
+    statsLine(title.toUpperCase());
+    statsLine(bar);
+}
+
+// Pulls out the metrics that matter most for perf triage, when present.
+// Handles both:
+//  - find().explain("executionStats")  -> top-level queryPlanner/executionStats
+//  - aggregate(pipeline, {explain:true}) -> stages array (shape varies by
+//    server version; $cursor / $geoNear stages carry executionStats/inputStage)
+function extractKeyMetrics(explainObj) {
+    const metrics = {};
+
+    // Case 1: classic find() explain shape
+    if (explainObj.executionStats) {
+        const es = explainObj.executionStats;
+        metrics.executionTimeMillis = es.executionTimeMillis;
+        metrics.totalKeysExamined = es.totalKeysExamined;
+        metrics.totalDocsExamined = es.totalDocsExamined;
+        metrics.nReturned = es.nReturned;
+        if (explainObj.queryPlanner && explainObj.queryPlanner.winningPlan) {
+            metrics.winningPlanStage = explainObj.queryPlanner.winningPlan.stage;
+            metrics.indexUsed =
+                (explainObj.queryPlanner.winningPlan.inputStage &&
+                 explainObj.queryPlanner.winningPlan.inputStage.indexName) || null;
+        }
+        return metrics;
+    }
+
+    // Case 2: aggregate() explain shape - walk the stages array looking
+    // for anything carrying executionStats or a winning plan.
+    if (Array.isArray(explainObj.stages)) {
+        const stageSummaries = [];
+        explainObj.stages.forEach(stage => {
+            const stageName = Object.keys(stage)[0];
+            const stageBody = stage[stageName];
+            const summary = { stage: stageName };
+
+            // $cursor / $geoNear stages often embed a queryPlanner/executionStats
+            const qp = stageBody && (stageBody.queryPlanner || stageBody);
+            const es = stageBody && stageBody.executionStats;
+
+            if (es) {
+                summary.executionTimeMillisEstimate = es.executionTimeMillisEstimate;
+                summary.totalKeysExamined = es.totalKeysExamined;
+                summary.totalDocsExamined = es.totalDocsExamined;
+                summary.nReturned = es.nReturned;
+            }
+            if (qp && qp.winningPlan) {
+                summary.winningPlanStage = qp.winningPlan.stage;
+                summary.indexUsed =
+                    (qp.winningPlan.inputStage &&
+                     qp.winningPlan.inputStage.indexName) || null;
+            }
+            stageSummaries.push(summary);
+        });
+        metrics.stageSummaries = stageSummaries;
+    }
+
+    return metrics;
+}
+
+function writeExplainSection(title, explainObj) {
+    statsHeading(title);
+
+    if (!explainObj) {
+        statsLine("No explain data captured.");
+        return;
+    }
+
+    const metrics = extractKeyMetrics(explainObj);
+
+    statsLine("\n-- Key Metrics --");
+    if (metrics.stageSummaries) {
+        metrics.stageSummaries.forEach((s, i) => {
+            statsLine(`  Stage ${i + 1}: ${s.stage}`);
+            if (s.winningPlanStage) statsLine(`    Winning plan stage : ${s.winningPlanStage}`);
+            if (s.indexUsed !== undefined) statsLine(`    Index used         : ${s.indexUsed || "COLLSCAN / none"}`);
+            if (s.totalKeysExamined !== undefined) statsLine(`    Keys examined      : ${s.totalKeysExamined}`);
+            if (s.totalDocsExamined !== undefined) statsLine(`    Docs examined      : ${s.totalDocsExamined}`);
+            if (s.nReturned !== undefined) statsLine(`    Returned           : ${s.nReturned}`);
+            if (s.executionTimeMillisEstimate !== undefined) statsLine(`    Est. time (ms)     : ${s.executionTimeMillisEstimate}`);
+        });
+    } else {
+        statsLine(`  Winning plan stage : ${metrics.winningPlanStage || "N/A"}`);
+        statsLine(`  Index used         : ${metrics.indexUsed || "COLLSCAN / none"}`);
+        statsLine(`  Keys examined      : ${metrics.totalKeysExamined ?? "N/A"}`);
+        statsLine(`  Docs examined      : ${metrics.totalDocsExamined ?? "N/A"}`);
+        statsLine(`  Returned           : ${metrics.nReturned ?? "N/A"}`);
+        statsLine(`  Execution time(ms) : ${metrics.executionTimeMillis ?? "N/A"}`);
+    }
+
+    statsLine("\n-- Full Explain Output (raw JSON) --");
+    statsLine(JSON.stringify(explainObj, null, 2));
 }
 
 
@@ -106,6 +211,7 @@ printSection(
     "1. NEAREST AVAILABLE VEHICLE - EXPLAIN PLAN",
     results.geoNearExplain
 );
+writeExplainSection("1. Nearest Available Vehicle ($geoNear)", results.geoNearExplain);
 
 
 // ============================================================
@@ -137,9 +243,11 @@ if (samplePing) {
         `2. PINGS FOR VEHICLE ${samplePingVehicleId} - EXPLAIN PLAN`,
         results.pingsByVehicleExplain
     );
+    writeExplainSection(`2. Pings for Vehicle ${samplePingVehicleId}`, results.pingsByVehicleExplain);
 
 } else {
     printSection("2. PINGS BY VEHICLE", "No TelemetryPings documents found.");
+    writeExplainSection("2. Pings by Vehicle", null);
 }
 
 
@@ -163,6 +271,7 @@ printSection(
     "3. COUNT OF AVAILABLE VEHICLES - EXPLAIN PLAN",
     results.countAvailableExplain
 );
+writeExplainSection("3. Count of Available Vehicles", results.countAvailableExplain);
 
 
 // ============================================================
@@ -202,6 +311,7 @@ printSection(
     "4. GEO + AVAILABILITY FILTER - EXPLAIN PLAN",
     results.geoPlusAvailabilityExplain
 );
+writeExplainSection("4. Geo + Availability Filter", results.geoPlusAvailabilityExplain);
 
 
 // ============================================================
@@ -232,9 +342,11 @@ if (sampleReview) {
         `5. REVIEWS FOR VEHICLE ${sampleReviewVehicleId} - EXPLAIN PLAN`,
         results.reviewsByVehicleExplain
     );
+    writeExplainSection(`5. Reviews for Vehicle ${sampleReviewVehicleId}`, results.reviewsByVehicleExplain);
 
 } else {
     printSection("5. REVIEWS BY VEHICLE", "No TripReviews documents found.");
+    writeExplainSection("5. Reviews by Vehicle", null);
 }
 
 
@@ -260,6 +372,7 @@ printSection(
     "6. HIGH RATED REVIEWS (rating >= 4) - EXPLAIN PLAN",
     results.highRatedReviewsExplain
 );
+writeExplainSection("6. High Rated Reviews (rating >= 4)", results.highRatedReviewsExplain);
 
 
 // ============================================================
@@ -338,6 +451,7 @@ results.reviewAnalysisExplain =
     ], { explain: true });
 
 printSection("7. REVIEW ANALYSIS - EXPLAIN PLAN", results.reviewAnalysisExplain);
+writeExplainSection("7. Review Analysis ($facet)", results.reviewAnalysisExplain);
 
 
 // ============================================================
@@ -368,9 +482,11 @@ if (sampleMetadata) {
         `8. VEHICLE METADATA FOR ${sampleMetadataVehicleId} - EXPLAIN PLAN`,
         results.vehicleMetadataExplain
     );
+    writeExplainSection(`8. Vehicle Metadata for ${sampleMetadataVehicleId}`, results.vehicleMetadataExplain);
 
 } else {
     printSection("8. VEHICLE METADATA", "No VehicleMetadata documents found.");
+    writeExplainSection("8. Vehicle Metadata", null);
 }
 
 
@@ -446,6 +562,7 @@ printSection(
     "8B. TOP RATED VEHICLES + METADATA - EXPLAIN PLAN",
     results.ratingsVsMetadataExplain
 );
+writeExplainSection("8B. Top Rated Vehicles + Metadata (lookup after limit)", results.ratingsVsMetadataExplain);
 
 
 // ============================================================
@@ -559,6 +676,11 @@ reportLine("\n" + "#".repeat(60));
 reportLine("END OF REPORT");
 reportLine("#".repeat(60));
 
+// ---- Stats file footer ----
+statsLine("\n" + "#".repeat(60));
+statsLine("END OF EXPLAIN STATS");
+statsLine("#".repeat(60));
+
 
 // ============================================================
 // End
@@ -568,4 +690,5 @@ print("\n");
 print("=".repeat(70));
 print("ALL MONGODB PERFORMANCE QUERIES COMPLETED");
 print("Human-readable analysis report saved to: " + OUTPUT_FILE);
+print("Execution stats (explain plans) saved to: " + STATS_FILE);
 print("=".repeat(70));

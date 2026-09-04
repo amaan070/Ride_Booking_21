@@ -1,6 +1,6 @@
 ############################################################
 RIDESYNC - MONGODB PERFORMANCE & ANALYSIS REPORT
-Generated: Fri Sep 04 2026 20:43:29 GMT+0530 (India Standard Time)
+Generated: Fri Sep 04 2026 23:22:50 GMT+0530 (India Standard Time)
 ############################################################
 
 ============================================================
@@ -39,58 +39,56 @@ Top Feedback Tags
 ============================================================
 VEHICLE AVAILABILITY
 ============================================================
-Available Vehicles Right Now : 333080
+Available Vehicles Right Now : 3
 
 ============================================================
 NEAREST AVAILABLE VEHICLE
 ============================================================
-Vehicle ID     : b8ae33ac-ccf0-4652-b599-be6cd3181e80
-Distance       : 13.741289688540432 meters (~0.01 km)
-Availability   : Available
+No available vehicle found within 5km.
 
 ============================================================
 TOP RATED VEHICLES (WITH METADATA)
 ============================================================
-  1. Vehicle ba24b79a-8a58-46f6-b230-57948b734b1a
+  1. Vehicle 534c9736-30fa-47c5-979d-c83d40422816
      Avg Rating       : 5.00 (1 review(s))
-     Features         : wheelchair_accessible, ac, music_system, premium_interior
-     Last Inspection  : Sun Mar 22 2026
-  2. Vehicle bc534b17-4fbd-4f47-8e8f-d1ca55824ac2
-     Avg Rating       : 5.00 (2 review(s))
-     Features         : child_seat, phone_charger, ac, music_system
-     Last Inspection  : Sat Dec 13 2025
-  3. Vehicle 0048db23-cf7d-4c4e-9339-d1fa2e1005b4
+     Features         : music_system, wifi, ac, child_seat
+     Last Inspection  : Sun May 24 2026
+  2. Vehicle cdcb2431-cfa1-4e8e-ad75-7d166940f18f
      Avg Rating       : 5.00 (1 review(s))
-     Features         : ac, child_seat, wheelchair_accessible, music_system
-     Last Inspection  : Sat Sep 05 2026
-  4. Vehicle d7787151-5db2-4087-b402-d2458cb647a3
+     Features         : phone_charger, wheelchair_accessible
+     Last Inspection  : Thu Sep 03 2026
+  3. Vehicle a938d4f3-895b-4302-aca0-ee8971f860c0
      Avg Rating       : 5.00 (1 review(s))
-     Features         : wheelchair_accessible, wifi, child_seat
-     Last Inspection  : Tue May 26 2026
-  5. Vehicle 673b6b1b-f64f-441a-b0cd-31fbf473dd94
+     Features         : wifi, ac, phone_charger, music_system
+     Last Inspection  : Thu Jul 02 2026
+  4. Vehicle 5353797a-a815-4b9d-bce7-526e9bbb13c0
      Avg Rating       : 5.00 (1 review(s))
-     Features         : phone_charger, child_seat
-     Last Inspection  : Sun May 10 2026
-  6. Vehicle 2b36c279-a177-45fa-a269-b7c732c08f7e
+     Features         : child_seat, wifi, ac
+     Last Inspection  : Thu Aug 07 2025
+  5. Vehicle 41d94d0f-c23b-4b3e-83a3-858dc687af41
      Avg Rating       : 5.00 (1 review(s))
-     Features         : ac, child_seat
+     Features         : wheelchair_accessible, phone_charger
+     Last Inspection  : Mon Aug 17 2026
+  6. Vehicle 0c8d0c9d-abeb-42e7-9bdf-bcc7f8ff5e0f
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : wheelchair_accessible, ac, music_system, child_seat
+     Last Inspection  : Wed Feb 11 2026
+  7. Vehicle 9f856d72-7386-4fbf-8496-43975d8f83a1
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : music_system, phone_charger, wheelchair_accessible
+     Last Inspection  : Fri May 08 2026
+  8. Vehicle b86b773f-4a14-4feb-b9b3-17874200a3fe
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : ac, child_seat, music_system, wheelchair_accessible
+     Last Inspection  : Sat Aug 09 2025
+  9. Vehicle 7321e036-2ed9-4b85-81df-f02df5a4930c
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : music_system, wifi, wheelchair_accessible
+     Last Inspection  : Sun Aug 30 2026
+  10. Vehicle 6587834e-8271-415f-9ee0-5c0fc32e263a
+     Avg Rating       : 5.00 (1 review(s))
+     Features         : child_seat, wheelchair_accessible, music_system, wifi
      Last Inspection  : Fri Aug 07 2026
-  7. Vehicle 69974541-660e-44ad-a3d0-9263c791cbd3
-     Avg Rating       : 5.00 (1 review(s))
-     Features         : phone_charger, ac
-     Last Inspection  : Wed Apr 29 2026
-  8. Vehicle f30c2578-149f-440b-95e2-42c49c210c9e
-     Avg Rating       : 5.00 (2 review(s))
-     Features         : wifi
-     Last Inspection  : Tue May 26 2026
-  9. Vehicle 4b210bf6-1e42-46f7-9680-75b925c86949
-     Avg Rating       : 5.00 (1 review(s))
-     Features         : phone_charger, child_seat
-     Last Inspection  : Sun Jul 05 2026
-  10. Vehicle 7b3ed478-bd77-4e87-90b8-446465a8d0f1
-     Avg Rating       : 5.00 (2 review(s))
-     Features         : music_system, phone_charger, wheelchair_accessible, ac
-     Last Inspection  : Sat May 09 2026
 
 ############################################################
 END OF REPORT

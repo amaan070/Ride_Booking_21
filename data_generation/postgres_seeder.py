@@ -103,7 +103,7 @@ def seed_vehicles(conn):
     while len(data) < NUM_VEHICLES:
         rto = random.choice(RTO_CODES)
         series = f"{fake.random_uppercase_letter()}{fake.random_uppercase_letter()}"
-        number = random.randint(1000, 99999)
+        number = random.randint(1000, 9999999)
         plate = f"{rto}{series}{number}"
         if plate in plates:
             continue
@@ -123,12 +123,6 @@ def seed_vehicles(conn):
     print(f"  done. {len(vehicles)} vehicles created.")
     return vehicles
 
-
-# ============================================================
-# VehicleMetadata (MongoDB) — generated right after vehicles,
-# keyed on the same vehicle_id so it joins cleanly with the
-# Postgres `vehicles` table (see mongo_schema_map.json).
-# ============================================================
 
 def build_vehicle_metadata(vehicle_id, vehicle_class):
     """Build one VehicleMetadata doc matching mongo_schema_map.json's shape."""
