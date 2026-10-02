@@ -19,6 +19,7 @@ PG_CONFIG = {
 MONGO_URI = "mongodb://localhost:27017"
 MONGO_DB = "ridesync_mongo"
 
+
 NUM_RIDERS = 100000
 NUM_VEHICLES = 40000
 NUM_TRIPS = 50000
