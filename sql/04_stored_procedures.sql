@@ -74,7 +74,6 @@ DECLARE
     v_error_msg TEXT;
 BEGIN
     PERFORM set_config('ridesync.wallet_action', 'ESCROW_RELEASE', true);
-
     BEGIN
         UPDATE trips
            SET status = 'COMPLETED'

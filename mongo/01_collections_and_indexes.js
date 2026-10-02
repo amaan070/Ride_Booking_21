@@ -18,3 +18,7 @@ db.TelemetryPings.createIndex(
         expireAfterSeconds: 7200
     }
 );
+
+db.vehicleMetadata.createIndex({
+    vehicle_id: 1
+});

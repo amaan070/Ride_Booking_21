@@ -1,34 +1,34 @@
-use("ridesync_mongo");
+// Select database
+const db = db.getSiblingDB("ridesync_mongo");
 
-// Sample rider location: Lucknow
-const rider_location = {
-    type: "Point",
-    coordinates: [80.9462, 26.8467]
-};
 
-const nearest_vehicle = db.TelemetryPings.aggregate([
-    {
-        $geoNear: {
-            near: rider_location,
-            key: "location",
-            distanceField: "distance_meters",
-            maxDistance: 5000,
-            spherical: true,
-            query: {
-                is_available: true
+export function findNearestVehicle(
+    longitude,
+    latitude,
+    maxDistanceMeters = 5000
+) {
+    const rider_location = {
+        type: "Point",
+        coordinates: [longitude, latitude]
+    };
+
+    const result = db.TelemetryPings.aggregate([
+        {
+            $geoNear: {
+                near: rider_location,
+                key: "location",
+                distanceField: "distance_meters",
+                maxDistance: maxDistanceMeters,
+                spherical: true,
+                query: {
+                    is_available: true
+                }
             }
+        },
+        {
+            $limit: 1
         }
-    },
-    {
-        $limit: 1
-    }
-]);
+    ]).toArray();
 
-const result = nearest_vehicle.toArray();
-
-if (result.length > 0) {
-    print("Nearest available vehicle within 5 km:");
-    printjson(result[0]);
-} else {
-    print("No available vehicle found within 5 km.");
+    return result.length > 0 ? result[0] : null;
 }
