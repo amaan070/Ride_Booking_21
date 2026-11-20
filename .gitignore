@@ -1,3 +1,16 @@
 venv/
 __pycache__/
 *.pyc
+.env
+.venv/
+node_modules/
+dist/
+.DS_Store
+
+.pytest_cache/
+
+/web/test-results/
+/web/playwright-report/
+
+# Local assistant instructions (kept on the author machine only)
+AGENTS.md
